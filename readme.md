@@ -1,8 +1,9 @@
 # Process SalesForce Visual Force Labels!
 
 ## How to use
-- In your Visual Force page, have your labels like this: `<p>{_"Hi there I'm a label"_}</p>`
-- Run `Process SalesForce Labels` in the Sublime Command palette
+- In your Visual Force page, select your labels and hit `ctr-l`
+- It will turn into: `<p>{_"Hi there I'm a label"_}</p>`
+- Now run `Process SalesForce Labels` in the Sublime Command palette
 - Magic!
 	- The plugin replaces the labels with VisualForce syntax
 	- If they're not in the labels file already, its being added
