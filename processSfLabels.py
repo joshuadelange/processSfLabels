@@ -12,9 +12,7 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
     vf_opening_tag = '{!$Label.'
     vf_ending_tag = '}'
 
-    labels = []
-
-    f = {}
+    labels_file = ''
     fcontents = ''
 
     def processNextLabel(self):
@@ -40,7 +38,6 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
 
                 # write to xml!
                 print("writing to XML")
-                self.f.seek(len(self.fcontents) - 8)
 
                 xml = """
     <labels>
@@ -49,10 +46,12 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
         <protected>false</protected>
         <shortDescription>""" + label_camel_case + """</shortDescription>
         <value>""" + label_text + """</value>
-    </labels>
-</CustomLabels>"""
+    </labels>"""
 
-                print(self.f.write(xml))
+                f = open(self.labels_file, 'a', encoding='utf-8')
+                f.write(xml)
+                f.close()
+
                 print("Wrote to xml")
 
             else:
@@ -75,15 +74,16 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
         workspace = settings.get('mm_workspace')
         # hacky, but sorta works?
         project_name = sublime.active_window().project_file_name().replace('.sublime-project', '').replace(workspace, '').split('/')[0]
-        labels_file = workspace + project_name + '/src/labels/CustomLabels.labels'
+        self.labels_file = workspace + project_name + '/src/labels/CustomLabels.labels'
 
-        if(os.path.isfile(labels_file) == False):
+        if(os.path.isfile(self.labels_file) == False):
             # should probably error more verbose here
             print("FILE NOT FOUND")
         else:
 
-            self.f = open(labels_file, 'r+', encoding='utf-8')
-            self.fcontents = self.f.read()
+            f = open(self.labels_file, 'r', encoding='utf-8')
+            self.fcontents = f.read()
+            f.close()
 
         print(sublime.active_window().active_view())
 
@@ -97,4 +97,11 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
 
         self.processNextLabel()
 
-        self.f.close()
+        # horribly inefficient, but works for now ! :D
+        f = open(self.labels_file, 'r', encoding='utf-8')
+        data = f.read()
+        f.close()
+
+        f = open(self.labels_file, 'w', encoding='utf-8')
+        f.write(data.replace('</CustomLabels>', '') + "</CustomLabels>")
+        f.close()
