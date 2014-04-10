@@ -1,0 +1,3 @@
+[  
+    {  "keys": ["ctrl+l"], "command": "wrap_selection_with_vf_label" },
+]
