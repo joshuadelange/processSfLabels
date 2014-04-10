@@ -29,7 +29,7 @@ class processSfLabelsCommand(sublime_plugin.TextCommand):
             label_region_to_be_replaced = sublime.Region(start_of_label, end_of_label + len(self.ending_tag))
 
             label_text = self.view.substr(label_region)
-            label_camel_case = re.sub(r'\W+', '', ''.join(x for x in label_text.title() if not x.isspace()))
+            label_camel_case = re.sub(r'\W+', '', ''.join(x for x in label_text.title() if not x.isspace()))[:80]
 
             print("FOUND: '" + label_text + "'")
             print("Camelcase: '" + label_camel_case + "'")
